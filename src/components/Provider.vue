@@ -2,7 +2,7 @@
 import { provide, ref, watch } from 'vue'
 import { BackTop } from '@/components/ui/back-top'
 import { useAppStore } from '@/stores/app'
-import { buildGlassThemeTokens, hexToTintChannels, scaleGlassColorBrightness, tintGlassCardColor, toOpaqueGlassColor } from '@/utils/glassTheme'
+import { buildGlassThemeTokens, hexToTintChannels, mixGlassColors, tintGlassCardColor, toOpaqueGlassColor } from '@/utils/glassTheme'
 
 const appStore = useAppStore()
 
@@ -37,14 +37,14 @@ watch(
   ] as const,
   ([preset, customColors]) => {
     const tint = hexToTintChannels(appStore.nodeCardGlassTint)
-    const brightFactor = appStore.nodeCardGlassBrightness / 100
+    const brightRatio = appStore.nodeCardGlassBrightness / 100
     const tokens = buildGlassThemeTokens(preset, customColors)
-    // 节点卡片专用底色：先按 RGB 调色，再按明亮度缩放（不影响其他卡片与文字）。
-    const cardColor = (c: string) => scaleGlassColorBrightness(tintGlassCardColor(c, tint), brightFactor)
-    const ncLight = cardColor(tokens.lightCard)
-    const ncLightHover = cardColor(tokens.lightCardHover)
-    const ncDark = cardColor(tokens.darkCard)
-    const ncDarkHover = cardColor(tokens.darkCardHover)
+    // 卡片深浅：浅色主题卡色(0) ↔ 深色主题卡色(100) 插值，再叠加 hex 着色；亮/暗模式的卡片深浅统一由明亮度决定。
+    const cardColor = (light: string, dark: string) => tintGlassCardColor(mixGlassColors(light, dark, brightRatio), tint)
+    const ncLight = cardColor(tokens.lightCard, tokens.darkCard)
+    const ncLightHover = cardColor(tokens.lightCardHover, tokens.darkCardHover)
+    const ncDark = ncLight
+    const ncDarkHover = ncLightHover
     const root = document.documentElement
     // 全局玻璃配色（主题原值，供 .bg-card 等其他卡片使用，不含节点卡片调节）。
     root.style.setProperty('--glass-light-card', tokens.lightCard)

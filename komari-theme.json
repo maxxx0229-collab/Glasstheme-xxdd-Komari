@@ -80,7 +80,7 @@
       { "key": "nodeCardGlassBlur", "name": "毛玻璃模糊程度", "type": "slider", "min": 0, "max": 60, "step": 1, "default": 20, "unit": "px", "showWhen": "nodeCardGlassEnabled", "help": "背景高斯模糊半径（0-60px），数值越大磨砂/虚化越强。" },
       { "key": "nodeCardGlassOpacity", "name": "卡片通透度", "type": "slider", "min": 0, "max": 100, "step": 1, "default": 68, "unit": "%", "showWhen": "nodeCardGlassEnabled", "help": "底框的通透程度，数值越低越透明、越能透出并虚化背景（毛玻璃感更强）；100% 为不额外透明。" },
       { "key": "nodeCardGlassTint", "name": "卡片着色 (Hex)", "type": "color", "default": "#ffffff", "showWhen": "nodeCardGlassEnabled", "help": "直接填十六进制色值（如 #9b1c1b）为卡片着色；#ffffff 表示不调整（保持主题原色）。" },
-      { "key": "nodeCardGlassBrightness", "name": "卡片明亮度", "type": "slider", "min": 0, "max": 200, "step": 1, "default": 100, "unit": "%", "showWhen": "nodeCardGlassEnabled", "help": "底框的明暗程度（非色彩灰度）：100% 为原始亮度，越低越暗偏黑、越高越亮偏白，不影响文字颜色。" },
+      { "key": "nodeCardGlassBrightness", "name": "卡片明亮度", "type": "slider", "min": 0, "max": 100, "step": 1, "default": 100, "showWhen": "nodeCardGlassEnabled", "help": "卡片颜色的深浅过渡：0=浅色主题的卡片色，100=深色主题的卡片色，中间平滑渐变。" },
       { "key": "nodeCardGlassHue", "name": "偏色 · 色相", "type": "slider", "min": -180, "max": 180, "step": 1, "default": 0, "unit": "°", "showWhen": "nodeCardGlassEnabled", "help": "整张卡片的色相旋转角度（-180° 至 180°）。" },
       { "key": "nodeCardGlassTemperature", "name": "偏色 · 色温", "type": "slider", "min": -100, "max": 100, "step": 1, "default": 0, "showWhen": "nodeCardGlassEnabled", "help": "正值偏暖（橙色），负值偏冷（蓝色）。" }
     ]

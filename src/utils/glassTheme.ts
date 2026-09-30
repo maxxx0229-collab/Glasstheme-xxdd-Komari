@@ -231,3 +231,34 @@ export function toOpaqueGlassColor(color: string): string {
 
   return `#${hex.slice(0, 6)}ff`
 }
+
+function parseHexColor(color: string): { r: number, g: number, b: number, a: number } | null {
+  const match = color.trim().match(HEX_COLOR_PATTERN)
+  if (!match)
+    return null
+  let hex = match[1] ?? ''
+  if (!hex)
+    return null
+  if (hex.length === 3)
+    hex = hex.split('').map(char => `${char}${char}`).join('')
+  return {
+    r: Number.parseInt(hex.slice(0, 2), 16),
+    g: Number.parseInt(hex.slice(2, 4), 16),
+    b: Number.parseInt(hex.slice(4, 6), 16),
+    a: hex.length === 8 ? Number.parseInt(hex.slice(6, 8), 16) : 255,
+  }
+}
+
+/**
+ * 在两个颜色间按 ratio 线性插值（ratio=0 取 A，1 取 B，含 alpha 通道）。
+ * 用于「卡片明亮度」：浅色主题卡片色(0) ↔ 深色主题卡片色(100) 的平滑过渡。
+ */
+export function mixGlassColors(colorA: string, colorB: string, ratio: number): string {
+  const t = Number.isFinite(ratio) ? Math.min(1, Math.max(0, ratio)) : 0
+  const a = parseHexColor(colorA)
+  const b = parseHexColor(colorB)
+  if (!a || !b)
+    return t < 0.5 ? colorA : colorB
+  const lerp = (x: number, y: number) => Math.round(x + (y - x) * t)
+  return `#${toHexByte(lerp(a.r, b.r))}${toHexByte(lerp(a.g, b.g))}${toHexByte(lerp(a.b, b.b))}${toHexByte(lerp(a.a, b.a))}`
+}

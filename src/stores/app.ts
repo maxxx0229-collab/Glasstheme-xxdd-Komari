@@ -1094,7 +1094,7 @@ const useAppStore = defineStore('app', () => {
 
   const nodeCardGlassGrayscale = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassGrayscale', 0, 0, 100))
 
-  const nodeCardGlassBrightness = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBrightness', 100, 0, 200))
+  const nodeCardGlassBrightness = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBrightness', 100, 0, 100))
 
   const nodeCardGlassOpacity = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassOpacity', 68, 0, 100))
 
