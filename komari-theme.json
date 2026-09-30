@@ -1,10 +1,10 @@
 {
-  "name": "Komari Glassmorphism",
+  "name": "Glasstheme-xxdd",
   "short": "Glassmorphism",
   "description": "A Glassmorphism theme for Komari",
   "version": "3.3.7",
-  "author": "sanrokamlan",
-  "url": "https://github.com/sanrokamlan-prog/komari-theme-Glassmorphism",
+  "author": "maxxx0229",
+  "url": "https://github.com/maxxx0229-collab/Glasstheme-xxdd-Komari",
   "preview": "preview.png",
   "configuration": {
     "type": "managed",
