@@ -1086,11 +1086,7 @@ const useAppStore = defineStore('app', () => {
 
   const nodeCardGlassBlur = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBlur', 20, 0, 60))
 
-  const nodeCardGlassTintR = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassTintR', 255, 0, 255))
-
-  const nodeCardGlassTintG = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassTintG', 255, 0, 255))
-
-  const nodeCardGlassTintB = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassTintB', 255, 0, 255))
+  const nodeCardGlassTint = computed<string>(() => readStringSetting(themeSettings.value, 'nodeCardGlassTint', '#ffffff') || '#ffffff')
 
   const nodeCardGlassHue = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassHue', 0, -180, 180))
 
@@ -1353,9 +1349,7 @@ const useAppStore = defineStore('app', () => {
     glassCustomColors,
     nodeCardGlassEnabled,
     nodeCardGlassBlur,
-    nodeCardGlassTintR,
-    nodeCardGlassTintG,
-    nodeCardGlassTintB,
+    nodeCardGlassTint,
     nodeCardGlassHue,
     nodeCardGlassTemperature,
     nodeCardGlassGrayscale,

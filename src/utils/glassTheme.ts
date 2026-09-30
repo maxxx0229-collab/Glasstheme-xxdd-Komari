@@ -131,6 +131,24 @@ export interface NodeCardTintChannels {
   b: number
 }
 
+/**
+ * 把十六进制颜色（#RRGGBB / #RGB，允许省略 #）解析为 RGB 三通道。
+ * 无效输入回退为 {255,255,255}（即不调整）。
+ */
+export function hexToTintChannels(hex: string): NodeCardTintChannels {
+  const raw = String(hex ?? '').trim().replace(/^#/, '')
+  const full = raw.length === 3
+    ? raw.split('').map(char => `${char}${char}`).join('')
+    : raw
+  if (!/^[0-9a-f]{6}$/i.test(full))
+    return { r: 255, g: 255, b: 255 }
+  return {
+    r: Number.parseInt(full.slice(0, 2), 16),
+    g: Number.parseInt(full.slice(2, 4), 16),
+    b: Number.parseInt(full.slice(4, 6), 16),
+  }
+}
+
 const HEX_COLOR_PATTERN = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 function clampChannel(value: number): number {

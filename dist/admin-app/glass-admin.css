@@ -316,6 +316,55 @@ aside,
   background: var(--gray-a5, rgb(255 255 255 / 14%));
 }
 
+/* ===== 主题设置颜色选择器（color 字段） ===== */
+
+.km-setting-color-row {
+  width: 100%;
+}
+
+.km-setting-color-swatch {
+  flex: none;
+  width: 46px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--input, rgb(0 0 0 / 22%));
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.km-setting-color-swatch::-webkit-color-swatch-wrapper {
+  padding: 3px;
+}
+
+.km-setting-color-swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: 5px;
+}
+
+.km-setting-color-swatch::-moz-color-swatch {
+  border: none;
+  border-radius: 5px;
+}
+
+.km-setting-color-hex {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--input, rgb(0 0 0 / 22%));
+  border-radius: 8px;
+  background: var(--color-background, transparent);
+  color: var(--foreground);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.9rem;
+}
+
+.km-setting-color-hex:focus-visible {
+  outline: 2px solid var(--accent-9, #079b75);
+  outline-offset: 1px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -599,7 +599,9 @@ const nodeCardGridClass = computed(() => {
 
 <style scoped>
 .home-view--motion {
-  animation: home-view-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* fill-mode 用 backwards（非 both）：动画结束后不保留 to 帧的 transform，稳定态回到 none，
+     避免 .home-view 长期带一个单位 transform 而成为 backdrop root、破坏节点卡片的 backdrop-filter。 */
+  animation: home-view-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 @keyframes home-view-enter {
@@ -610,7 +612,9 @@ const nodeCardGridClass = computed(() => {
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    /* 结束态用 transform:none（而非 translateY(0)）：避免 animation-fill-mode:both 永久保留一个 */
+    /* 单位 transform，使 .home-view 变成 backdrop root，从而破坏节点卡片的 backdrop-filter 毛玻璃模糊。 */
+    transform: none;
   }
 }
 

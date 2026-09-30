@@ -2,7 +2,7 @@
 import { provide, ref, watch } from 'vue'
 import { BackTop } from '@/components/ui/back-top'
 import { useAppStore } from '@/stores/app'
-import { buildGlassThemeTokens, scaleGlassColorBrightness, tintGlassCardColor, toOpaqueGlassColor } from '@/utils/glassTheme'
+import { buildGlassThemeTokens, hexToTintChannels, scaleGlassColorBrightness, tintGlassCardColor, toOpaqueGlassColor } from '@/utils/glassTheme'
 
 const appStore = useAppStore()
 
@@ -32,17 +32,11 @@ watch(
   () => [
     appStore.glassColorPreset,
     appStore.glassCustomColors,
-    appStore.nodeCardGlassTintR,
-    appStore.nodeCardGlassTintG,
-    appStore.nodeCardGlassTintB,
+    appStore.nodeCardGlassTint,
     appStore.nodeCardGlassBrightness,
   ] as const,
   ([preset, customColors]) => {
-    const tint = {
-      r: appStore.nodeCardGlassTintR,
-      g: appStore.nodeCardGlassTintG,
-      b: appStore.nodeCardGlassTintB,
-    }
+    const tint = hexToTintChannels(appStore.nodeCardGlassTint)
     const brightFactor = appStore.nodeCardGlassBrightness / 100
     const tokens = buildGlassThemeTokens(preset, customColors)
     // 节点卡片专用底色：先按 RGB 调色，再按明亮度缩放（不影响其他卡片与文字）。
