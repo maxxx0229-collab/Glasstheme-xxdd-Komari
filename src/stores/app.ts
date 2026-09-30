@@ -1084,7 +1084,7 @@ const useAppStore = defineStore('app', () => {
   // ===== 节点卡片毛玻璃特效（开关 + 二级滑块设置） =====
   const nodeCardGlassEnabled = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'nodeCardGlassEnabled', true))
 
-  const nodeCardGlassBlur = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBlur', 14, 0, 40))
+  const nodeCardGlassBlur = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBlur', 20, 0, 60))
 
   const nodeCardGlassTintR = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassTintR', 255, 0, 255))
 
@@ -1097,6 +1097,10 @@ const useAppStore = defineStore('app', () => {
   const nodeCardGlassTemperature = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassTemperature', 0, -100, 100))
 
   const nodeCardGlassGrayscale = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassGrayscale', 0, 0, 100))
+
+  const nodeCardGlassBrightness = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassBrightness', 100, 0, 200))
+
+  const nodeCardGlassOpacity = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassOpacity', 68, 0, 100))
 
   const colorVisionMode = computed<ColorVisionMode>(() => parseColorVisionMode(themeSettings.value.colorVisionMode))
 
@@ -1355,6 +1359,8 @@ const useAppStore = defineStore('app', () => {
     nodeCardGlassHue,
     nodeCardGlassTemperature,
     nodeCardGlassGrayscale,
+    nodeCardGlassBrightness,
+    nodeCardGlassOpacity,
     colorVisionMode,
     colorVisionFriendly,
     visitorAuditSupported,

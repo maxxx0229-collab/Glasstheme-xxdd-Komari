@@ -291,40 +291,71 @@ html.legacy-webkit [data-slot='card'] {
   }
 }
 
-/* ===== 节点卡片毛玻璃 — 亮色透出背景 ===== */
-/* ===== 全局卡片毛玻璃（统一首页和详情页） ===== */
+/* ===== 全局卡片毛玻璃（非节点卡片：保持主题原色与固定模糊） ===== */
 
 .bg-card,
 [data-slot='card'] {
-  /* Keep the glass effect, but avoid making every card an overly expensive compositing layer. */
   background-color: var(--glass-light-card, rgb(241 245 249 / 0.74)) !important;
   border: 1px solid var(--glass-light-border, rgb(226 232 240 / 0.68)) !important;
-  backdrop-filter: blur(14px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(145%) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
   box-shadow: var(--glass-light-shadow, 0 8px 28px rgb(15 23 42 / 0.18)) !important;
 }
 
-/* ===== 节点卡片：毛玻璃程度/偏色/黑白可由主题设置调整 ===== */
+.bg-card:hover,
+[data-slot='card']:hover {
+  background-color: var(--glass-light-card-hover, rgb(248 250 252 / 0.8)) !important;
+  box-shadow: var(--glass-light-shadow, 0 12px 38px rgb(15 23 42 / 0.2)) !important;
+}
+
+.dark .bg-card,
+.dark [data-slot='card'] {
+  background-color: var(--glass-dark-card, rgb(10 14 22 / 0.82)) !important;
+  border: 1px solid var(--glass-dark-border, rgb(255 255 255 / 0.18)) !important;
+  box-shadow: var(--glass-dark-shadow, 0 8px 30px rgb(0 0 0 / 0.48)) !important;
+}
+
+.dark .bg-card:hover,
+.dark [data-slot='card']:hover {
+  background-color: var(--glass-dark-card-hover, rgb(10 14 22 / 0.9)) !important;
+}
+
+/* ===== 节点卡片：模糊/通透/颜色/明亮度/偏色 可由主题设置调节（仅作用 .node-card） ===== */
 
 .node-card {
-  background-color: var(--glass-light-card, rgb(241 245 249 / 0.74)) !important;
+  background-color: color-mix(in srgb, var(--nc-card-light, var(--glass-light-card, rgb(241 245 249 / 0.74))) var(--nc-alpha, 100%), transparent) !important;
   border: 1px solid var(--glass-light-border, rgb(226 232 240 / 0.68)) !important;
-  backdrop-filter: blur(var(--nc-blur, 14px)) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(var(--nc-blur, 14px)) saturate(145%) !important;
+  backdrop-filter: blur(var(--nc-blur, 20px)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--nc-blur, 20px)) saturate(160%) !important;
   box-shadow: var(--glass-light-shadow, 0 8px 28px rgb(15 23 42 / 0.18)) !important;
 }
 
-/* 色相 / 黑白：整张节点卡片滤镜 */
-html.nc-card-fx .node-card {
-  filter: hue-rotate(var(--nc-hue, 0deg)) grayscale(var(--nc-gray, 0%)) !important;
+.node-card:hover {
+  background-color: color-mix(in srgb, var(--nc-card-light-hover, var(--glass-light-card-hover, rgb(248 250 252 / 0.8))) var(--nc-alpha, 100%), transparent) !important;
+  box-shadow: var(--glass-light-shadow, 0 12px 38px rgb(15 23 42 / 0.2)) !important;
 }
 
-/* 色温：在卡片背景之上叠加暖/冷色罩（不影响文字与内容） */
+.dark .node-card {
+  background-color: color-mix(in srgb, var(--nc-card-dark, var(--glass-dark-card, rgb(10 14 22 / 0.82))) var(--nc-alpha, 100%), transparent) !important;
+  border: 1px solid var(--glass-dark-border, rgb(255 255 255 / 0.18)) !important;
+  box-shadow: var(--glass-dark-shadow, 0 8px 30px rgb(0 0 0 / 0.48)) !important;
+}
+
+.dark .node-card:hover {
+  background-color: color-mix(in srgb, var(--nc-card-dark-hover, var(--glass-dark-card-hover, rgb(10 14 22 / 0.9))) var(--nc-alpha, 100%), transparent) !important;
+}
+
+/* 色相：整张节点卡片滤镜 */
+html.nc-card-fx .node-card {
+  filter: hue-rotate(var(--nc-hue, 0deg)) !important;
+}
+
+/* 色温：卡片背景之上叠加暖/冷色罩（不影响文字与内容） */
 html.nc-card-temp .node-card {
   background-image: linear-gradient(var(--nc-temp-color, transparent), var(--nc-temp-color, transparent)) !important;
 }
 
-/* 关闭毛玻璃：不透明纯色卡片 + 无模糊 */
+/* 关闭毛玻璃：不透明纯色卡片 + 无模糊（不受通透度影响） */
 html.nc-card-glass-off .node-card {
   background-color: var(--nc-card-solid-light, rgb(241 245 249)) !important;
   background-image: none !important;
@@ -342,35 +373,6 @@ html.dark.nc-card-glass-off .node-card {
 
 html.dark.nc-card-glass-off .node-card:hover {
   background-color: var(--nc-card-solid-dark-hover, rgb(10 14 22)) !important;
-}
-
-.node-card:hover,
-.bg-card:hover,
-[data-slot='card']:hover {
-  background-color: var(--glass-light-card-hover, rgb(248 250 252 / 0.8)) !important;
-  box-shadow: var(--glass-light-shadow, 0 12px 38px rgb(15 23 42 / 0.2)) !important;
-}
-
-/* ===== 暗色模式 ===== */
-
-.dark .bg-card,
-.dark [data-slot='card'] {
-  /* Dark mode: keep a translucent glass feel while improving foreground contrast */
-  background-color: var(--glass-dark-card, rgb(10 14 22 / 0.82)) !important;
-  border: 1px solid var(--glass-dark-border, rgb(255 255 255 / 0.18)) !important;
-  box-shadow: var(--glass-dark-shadow, 0 8px 30px rgb(0 0 0 / 0.48)) !important;
-}
-
-.dark .node-card {
-  background-color: var(--glass-dark-card, rgb(10 14 22 / 0.82)) !important;
-  border: 1px solid var(--glass-dark-border, rgb(255 255 255 / 0.18)) !important;
-  box-shadow: var(--glass-dark-shadow, 0 8px 30px rgb(0 0 0 / 0.48)) !important;
-}
-
-.dark .node-card:hover,
-.dark .bg-card:hover,
-.dark [data-slot='card']:hover {
-  background-color: var(--glass-dark-card-hover, rgb(10 14 22 / 0.9)) !important;
 }
 
 .node-card,

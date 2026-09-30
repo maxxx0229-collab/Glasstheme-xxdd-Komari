@@ -171,6 +171,33 @@ export function tintGlassCardColor(color: string, tint: NodeCardTintChannels): s
 }
 
 /**
+ * 按明亮度系数缩放卡片背景色（各通道 × factor，alpha 保持不变）。
+ * factor=1 为原亮度，<1 变暗（偏黑），>1 变亮（偏白）。仅影响底框背景，不影响文字。
+ */
+export function scaleGlassColorBrightness(color: string, factor: number): string {
+  const safeFactor = Number.isFinite(factor) ? Math.min(3, Math.max(0, factor)) : 1
+  if (safeFactor === 1)
+    return color
+
+  const match = color.trim().match(HEX_COLOR_PATTERN)
+  if (!match)
+    return color
+
+  let hex = match[1] ?? ''
+  if (!hex)
+    return color
+  if (hex.length === 3)
+    hex = hex.split('').map(char => `${char}${char}`).join('')
+
+  const red = Number.parseInt(hex.slice(0, 2), 16)
+  const green = Number.parseInt(hex.slice(2, 4), 16)
+  const blue = Number.parseInt(hex.slice(4, 6), 16)
+  const alpha = hex.length === 8 ? hex.slice(6, 8) : 'ff'
+
+  return `#${toHexByte(red * safeFactor)}${toHexByte(green * safeFactor)}${toHexByte(blue * safeFactor)}${alpha}`
+}
+
+/**
  * 将带透明度的颜色转为完全不透明（#RRGGBBAA → #RRGGBBFF），用于关闭毛玻璃后的纯色卡片。
  */
 export function toOpaqueGlassColor(color: string): string {
