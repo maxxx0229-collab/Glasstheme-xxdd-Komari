@@ -13,7 +13,6 @@ import { pingColor } from '@/utils/pingTone'
 import { useAppStore } from '@/stores/app'
 import { formatBytesPerSecondWithConfig, formatBytesWithConfig, formatDateTime, getStatus, getUptimeDays } from '@/utils/helper'
 import { getDiskPercentage, getMemoryPercentage, getTrafficUsed } from '@/utils/nodeMetricsHelper'
-import { useMonitorNodes } from '@/composables/useMonitorNodes'
 import { getOSImage, getOSName } from '@/utils/osImageHelper'
 import { getRegionCode, getRegionDisplayName } from '@/utils/regionHelper'
 import { formatCurrencyValue, formatPriceWithCycle, getDaysUntilExpired, getExpireStatus, getRemainingValue, isFreePrice, parseTags } from '@/utils/tagHelper'
@@ -122,31 +121,20 @@ function lossBarTooltip(bar: { time: string, latency: number | null, loss: numbe
   return `${new Date(bar.time).toLocaleTimeString()} · ${bar.loss === null ? '无丢包数据' : `${bar.loss.toFixed(1)}% 丢包`}`
 }
 
-// 流量口径：同名节点优先采用监控面板（tz.ztzy.store / tz.max0229.store）的月周期数据
-const monitorNodes = useMonitorNodes()
-const monitorNode = computed(() => monitorNodes.value.get(props.node.name))
-const cardTrafficLimit = computed(() => {
-  const monitor = monitorNode.value
-  return monitor && (monitor.traffic_limit ?? 0) > 0 ? monitor.traffic_limit! : (props.node.traffic_limit ?? 0)
-})
+// 流量口径：一律以 Komari 后台为准；「已使用流量矫正」可对指定节点手动覆盖已用总量（不分上下行）
+const cardTrafficLimit = computed(() => props.node.traffic_limit ?? 0)
 const cardHasTrafficLimit = computed(() => cardTrafficLimit.value > 0)
 const trafficUsed = computed(() => {
-  const monitor = monitorNode.value
-  return monitor && (monitor.month_used ?? 0) > 0 ? monitor.month_used! : getTrafficUsed(props.node)
+  const correction = appStore.getTrafficUsedCorrection(props.node.name)
+  return correction ?? getTrafficUsed(props.node)
 })
 const trafficUsedPercentage = computed(() => {
   if (!cardHasTrafficLimit.value)
     return 0
   return Math.min(trafficUsed.value / cardTrafficLimit.value * 100, 100)
 })
-const cardTrafficUp = computed(() => {
-  const monitor = monitorNode.value
-  return monitor && (monitor.month_tx ?? 0) > 0 ? monitor.month_tx! : (props.node.net_total_up ?? 0)
-})
-const cardTrafficDown = computed(() => {
-  const monitor = monitorNode.value
-  return monitor && (monitor.month_rx ?? 0) > 0 ? monitor.month_rx! : (props.node.net_total_down ?? 0)
-})
+const cardTrafficUp = computed(() => props.node.net_total_up ?? 0)
+const cardTrafficDown = computed(() => props.node.net_total_down ?? 0)
 const nodeMessage = computed(() => props.node.message?.trim() ?? '')
 const nodeMessageTooltip = computed(() => {
   const message = nodeMessage.value

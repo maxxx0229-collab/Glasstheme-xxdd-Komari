@@ -800,6 +800,41 @@ function readStringSetting(settings: ThemeSettings, key: string, fallback = ''):
   return typeof value === 'string' ? value.trim() : fallback
 }
 
+/**
+ * 解析「已使用流量矫正」：按节点名手动覆盖已用流量总量（单位 GB，不分上下行）。
+ * 支持两种写法：JSON {"LA-DMIT":500} 或每行 `节点名=500`。值按 GiB(×1073741824) 转字节。
+ */
+function parseTrafficUsedCorrections(settings: ThemeSettings): Map<string, number> {
+  const map = new Map<string, number>()
+  const trimmed = readStringSetting(settings, 'trafficUsedCorrections', '').trim()
+  if (!trimmed)
+    return map
+
+  if (trimmed.startsWith('{')) {
+    try {
+      const record = JSON.parse(trimmed) as Record<string, unknown>
+      for (const [name, value] of Object.entries(record)) {
+        const gb = Number(value)
+        if (name.trim() && Number.isFinite(gb) && gb >= 0)
+          map.set(name.trim(), gb * 1073741824)
+      }
+      return map
+    }
+    catch {
+      // 解析失败则继续尝试按行解析
+    }
+  }
+
+  for (const line of trimmed.split(/\r?\n/)) {
+    const match = line.match(/^\s*(.+?)\s*=\s*([\d.]+)\s*(?:G|GB|g|gb)?\s*$/)
+    const name = match?.[1]?.trim()
+    const gb = Number(match?.[2])
+    if (name && Number.isFinite(gb) && gb >= 0)
+      map.set(name, gb * 1073741824)
+  }
+  return map
+}
+
 function resolveBackgroundSource(value: unknown): string {
   if (typeof value !== 'string')
     return ''
@@ -1098,6 +1133,13 @@ const useAppStore = defineStore('app', () => {
 
   const nodeCardGlassOpacity = computed<number>(() => readNumberSetting(themeSettings.value, 'nodeCardGlassOpacity', 68, 0, 100))
 
+  // 已使用流量矫正：节点名 -> 手动指定的已用字节数（优先于 Komari 实时数据）
+  const trafficUsedCorrections = computed<Map<string, number>>(() => parseTrafficUsedCorrections(themeSettings.value))
+
+  function getTrafficUsedCorrection(name: string): number | undefined {
+    return trafficUsedCorrections.value.get(String(name ?? '').trim())
+  }
+
   const colorVisionMode = computed<ColorVisionMode>(() => parseColorVisionMode(themeSettings.value.colorVisionMode))
 
   const colorVisionFriendly = computed<boolean>(() => colorVisionMode.value === 'accessible')
@@ -1355,6 +1397,8 @@ const useAppStore = defineStore('app', () => {
     nodeCardGlassGrayscale,
     nodeCardGlassBrightness,
     nodeCardGlassOpacity,
+    trafficUsedCorrections,
+    getTrafficUsedCorrection,
     colorVisionMode,
     colorVisionFriendly,
     visitorAuditSupported,
