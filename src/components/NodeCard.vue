@@ -125,7 +125,7 @@ function lossBarTooltip(bar: { time: string, latency: number | null, loss: numbe
 const cardTrafficLimit = computed(() => props.node.traffic_limit ?? 0)
 const cardHasTrafficLimit = computed(() => cardTrafficLimit.value > 0)
 const trafficUsed = computed(() => {
-  const correction = appStore.getTrafficUsedCorrection(props.node.name)
+  const correction = appStore.getTrafficUsedCorrection(props.node.name, props.node.uuid)
   return correction ?? getTrafficUsed(props.node)
 })
 const trafficUsedPercentage = computed(() => {

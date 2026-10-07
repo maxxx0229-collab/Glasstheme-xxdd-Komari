@@ -1136,8 +1136,12 @@ const useAppStore = defineStore('app', () => {
   // 已使用流量矫正：节点名 -> 手动指定的已用字节数（优先于 Komari 实时数据）
   const trafficUsedCorrections = computed<Map<string, number>>(() => parseTrafficUsedCorrections(themeSettings.value))
 
-  function getTrafficUsedCorrection(name: string): number | undefined {
-    return trafficUsedCorrections.value.get(String(name ?? '').trim())
+  function getTrafficUsedCorrection(name: string, uuid?: string): number | undefined {
+    const map = trafficUsedCorrections.value
+    const id = String(uuid ?? '').trim()
+    if (id && map.has(id))
+      return map.get(id)
+    return map.get(String(name ?? '').trim())
   }
 
   const colorVisionMode = computed<ColorVisionMode>(() => parseColorVisionMode(themeSettings.value.colorVisionMode))

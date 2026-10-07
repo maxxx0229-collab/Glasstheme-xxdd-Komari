@@ -52,7 +52,7 @@
       { "key": "offlineNodesLast", "name": "离线节点置底", "type": "switch", "default": false, "help": "筛选或排序时优先显示在线节点。" },
       { "key": "homeHighLoadThreshold", "name": "高负载阈值", "type": "number", "default": 80, "help": "CPU、内存或硬盘占用达到该百分比时归为高负载节点（1-100）" },
       { "key": "homeTrafficWarningThreshold", "name": "流量预警阈值", "type": "number", "default": 80, "help": "节点流量配额使用率达到该百分比时归为流量预警（1-100）" },
-      { "key": "trafficUsedCorrections", "name": "已使用流量矫正", "type": "richtext", "default": "", "help": "按节点手动覆盖「已用流量」总量（不分上下行，单位 GB）。每行一条：节点名=数值，例如 LA-DMIT=500；也支持 JSON {\"LA-DMIT\":500}。留空则使用 Komari 后台的实时流量。" },
+      { "key": "trafficUsedCorrections", "name": "已使用流量矫正", "type": "richtext", "default": "", "help": "按节点手动覆盖「已用流量」总量（不分上下行，单位 GB）。每行一条：标识=数值。标识可用节点唯一ID(uuid) 或 节点名；同名机器请用 uuid 精确区分。例：LA-DMIT=500 或 2a814b63-45a3-426a-a9dc-3550d6931c76=500。也支持 JSON。留空则使用 Komari 后台的实时流量。" },
       { "key": "homeExpiringDays", "name": "即将到期天数", "type": "number", "default": 30, "help": "节点剩余天数小于等于该值时归为即将到期（1-3650）" },
       { "key": "diskPredictionEnabled", "name": "启用磁盘耗尽预测", "type": "switch", "default": false, "help": "基于负载历史里的磁盘用量趋势预测耗尽时间；样本少于 2 天或未增长时不显示" },
       { "key": "diskPredictionThresholdDays", "name": "磁盘预测预警天数", "type": "number", "default": 30, "help": "预计剩余天数小于等于该值时在节点卡片和详情负载图中显示提示（1-3650）" },
